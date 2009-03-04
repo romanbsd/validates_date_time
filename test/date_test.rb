@@ -71,14 +71,15 @@ class DateTest < Test::Unit::TestCase
   end
 
   def test_before_and_after_with_i18n
-    load_path = I18n.load_path
-    I18n.load_path.clear
-    I18n.load_path << File.join(File.dirname(__FILE__),'fixtures/en.yml')
+    original_load_path = I18n.load_path
+    
+    I18n.load_path = [File.join(File.dirname(__FILE__),'fixtures/en.yml')]
     I18n.reload!
+    
     assert_invalid_and_errors_match /i18n_before/, :date_of_death => (Date.today + 1).to_s
     assert_invalid_and_errors_match /i18n_after/, :date_of_birth => (Date.today + 1).to_s
-    I18n.load_path.clear
-    I18n.load_path = load_path
+  ensure
+    I18n.load_path = original_load_path
     I18n.reload!
   end
   
